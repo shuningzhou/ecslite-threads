@@ -20,11 +20,11 @@ namespace Leopotam.EcsLite.Threads {
             TThread thread = default;
             var data1 = _pool1.GetRawItems ();
             thread.Init (_filter.GetRawEntities (), data1);
-            SetData (ref thread);
+            SetData (systems, ref thread);
             ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
 
-        protected virtual void SetData (ref TThread thread) { }
+        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
     }
 
     public abstract class EcsThreadSystem<TThread, T1, T2> : EcsThreadSystemBase
@@ -47,11 +47,11 @@ namespace Leopotam.EcsLite.Threads {
                 _filter.GetRawEntities (),
                 _pool1.GetRawItems (),
                 _pool2.GetRawItems ());
-            SetData (ref thread);
+            SetData (systems, ref thread);
             ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
 
-        protected virtual void SetData (ref TThread thread) { }
+        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
     }
 
     public abstract class EcsThreadSystem<TThread, T1, T2, T3> : EcsThreadSystemBase
@@ -78,11 +78,11 @@ namespace Leopotam.EcsLite.Threads {
                 _pool1.GetRawItems (),
                 _pool2.GetRawItems (),
                 _pool3.GetRawItems ());
-            SetData (ref thread);
+            SetData (systems, ref thread);
             ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
 
-        protected virtual void SetData (ref TThread thread) { }
+        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
     }
 
     public abstract class EcsThreadSystem<TThread, T1, T2, T3, T4> : EcsThreadSystemBase
@@ -113,11 +113,11 @@ namespace Leopotam.EcsLite.Threads {
                 _pool2.GetRawItems (),
                 _pool3.GetRawItems (),
                 _pool4.GetRawItems ());
-            SetData (ref thread);
+            SetData (systems, ref thread);
             ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
 
-        protected virtual void SetData (ref TThread thread) { }
+        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
     }
 
     public abstract class EcsThreadSystemBase : IEcsRunSystem {

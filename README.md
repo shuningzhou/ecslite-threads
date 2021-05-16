@@ -46,19 +46,23 @@ struct C1 {
 ```csharp
 class TestThreadSystem : EcsThreadSystem<TestThread, C1> {
     protected override int GetChunkSize (EcsSystems systems) {
+        // How many entities will be processed in one chunk.
+        // This method will be called each frame.
         return 1000;
     }
 
     protected override EcsWorld GetWorld (EcsSystems systems) {
+        // World for component pools and filter.
         return systems.GetWorld ();
     }
     
     protected override EcsFilter GetFilter (EcsWorld world) {
+        // Filter for processing.
         return world.Filter<C1> ().End ();
     }
 
     // Optional additional initialization of job structure.
-    protected override void SetData (ref TestThread thread) {
+    protected override void SetData (EcsSystems systems, ref TestThread thread) {
         thread.DeltaTime = Time.deltaTime;
     }
 }

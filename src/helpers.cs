@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 
 namespace Leopotam.EcsLite.Threads {
-    public static class ThreadService {
+    static class ThreadService {
         static ThreadDesc[] _descs;
         static ThreadWorkerHandler _task;
         static readonly int DescsCount;
@@ -25,14 +25,15 @@ namespace Leopotam.EcsLite.Threads {
             }
         }
 
-        public static void Run<T> (ref T task, int count, int chunkSize) where T : struct, IEcsThreadBase {
+        public static void Run(ThreadWorkerHandler worker, int count, int chunkSize) {
 #if DEBUG
             if (_task != null) { throw new Exception ("Calls from multiple threads not supported."); }
 #endif
             if (count <= 0 || chunkSize <= 0) {
                 return;
             }
-            _task = task.Execute;
+            _task = worker;
+            // _task = task.Execute;
             var processed = 0;
             var jobSize = count / DescsCount;
             int workersCount;

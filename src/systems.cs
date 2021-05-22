@@ -5,57 +5,63 @@
 // ----------------------------------------------------------------------------
 
 namespace Leopotam.EcsLite.Threads {
-    public abstract class EcsThreadSystem<TThread, T1> : EcsThreadSystemBase
-        where TThread : struct, IEcsThread<T1>
+    public abstract class EcsThreadSystem<TThread, T1> : EcsThreadSystemBase, IEcsRunSystem
+        where TThread : class, IEcsThread<T1>, new ()
         where T1 : struct {
         EcsFilter _filter;
         EcsPool<T1> _pool1;
+        TThread _thread;
+        ThreadWorkerHandler _worker;
 
-        public override void Run (EcsSystems systems) {
+        public void Run (EcsSystems systems) {
             if (_filter == null) {
                 var world = GetWorld (systems);
                 _pool1 = world.GetPool<T1> ();
                 _filter = GetFilter (world);
+                _thread = new TThread ();
+                _worker = _thread.Execute;
             }
-            TThread thread = default;
-            thread.Init (
+            _thread.Init (
                 _filter.GetRawEntities (),
                 _pool1.GetRawDenseItems (), _pool1.GetRawSparseItems ());
-            SetData (systems, ref thread);
-            ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
+            SetData (systems, _thread);
+            ThreadService.Run (_worker, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
 
-        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
+        protected virtual void SetData (EcsSystems systems, TThread thread) { }
     }
 
-    public abstract class EcsThreadSystem<TThread, T1, T2> : EcsThreadSystemBase
+    public abstract class EcsThreadSystem<TThread, T1, T2> : EcsThreadSystemBase, IEcsRunSystem
         where TThread : struct, IEcsThread<T1, T2>
         where T1 : struct
         where T2 : struct {
         EcsFilter _filter;
         EcsPool<T1> _pool1;
         EcsPool<T2> _pool2;
-
-        public override void Run (EcsSystems systems) {
+        TThread _thread;
+        ThreadWorkerHandler _worker;
+    
+        public void Run (EcsSystems systems) {
             if (_filter == null) {
                 var world = GetWorld (systems);
                 _pool1 = world.GetPool<T1> ();
                 _pool2 = world.GetPool<T2> ();
                 _filter = GetFilter (world);
+                _thread = new TThread ();
+                _worker = _thread.Execute;
             }
-            TThread thread = default;
-            thread.Init (
+            _thread.Init (
                 _filter.GetRawEntities (),
                 _pool1.GetRawDenseItems (), _pool1.GetRawSparseItems (),
                 _pool2.GetRawDenseItems (), _pool2.GetRawSparseItems ());
-            SetData (systems, ref thread);
-            ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
+            SetData (systems, _thread);
+            ThreadService.Run (_worker, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
-
-        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
+    
+        protected virtual void SetData (EcsSystems systems, TThread thread) { }
     }
-
-    public abstract class EcsThreadSystem<TThread, T1, T2, T3> : EcsThreadSystemBase
+    
+    public abstract class EcsThreadSystem<TThread, T1, T2, T3> : EcsThreadSystemBase, IEcsRunSystem
         where TThread : struct, IEcsThread<T1, T2, T3>
         where T1 : struct
         where T2 : struct
@@ -64,29 +70,32 @@ namespace Leopotam.EcsLite.Threads {
         EcsPool<T1> _pool1;
         EcsPool<T2> _pool2;
         EcsPool<T3> _pool3;
-
-        public override void Run (EcsSystems systems) {
+        TThread _thread;
+        ThreadWorkerHandler _worker;
+    
+        public void Run (EcsSystems systems) {
             if (_filter == null) {
                 var world = GetWorld (systems);
                 _pool1 = world.GetPool<T1> ();
                 _pool2 = world.GetPool<T2> ();
                 _pool3 = world.GetPool<T3> ();
                 _filter = GetFilter (world);
+                _thread = new TThread ();
+                _worker = _thread.Execute;
             }
-            TThread thread = default;
-            thread.Init (
+            _thread.Init (
                 _filter.GetRawEntities (),
                 _pool1.GetRawDenseItems (), _pool1.GetRawSparseItems (),
                 _pool2.GetRawDenseItems (), _pool2.GetRawSparseItems (),
                 _pool3.GetRawDenseItems (), _pool3.GetRawSparseItems ());
-            SetData (systems, ref thread);
-            ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
+            SetData (systems, _thread);
+            ThreadService.Run (_worker, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
-
-        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
+    
+        protected virtual void SetData (EcsSystems systems, TThread thread) { }
     }
-
-    public abstract class EcsThreadSystem<TThread, T1, T2, T3, T4> : EcsThreadSystemBase
+    
+    public abstract class EcsThreadSystem<TThread, T1, T2, T3, T4> : EcsThreadSystemBase, IEcsRunSystem
         where TThread : struct, IEcsThread<T1, T2, T3, T4>
         where T1 : struct
         where T2 : struct
@@ -97,8 +106,10 @@ namespace Leopotam.EcsLite.Threads {
         EcsPool<T2> _pool2;
         EcsPool<T3> _pool3;
         EcsPool<T4> _pool4;
-
-        public override void Run (EcsSystems systems) {
+        TThread _thread;
+        ThreadWorkerHandler _worker;
+    
+        public void Run (EcsSystems systems) {
             if (_filter == null) {
                 var world = GetWorld (systems);
                 _pool1 = world.GetPool<T1> ();
@@ -106,23 +117,23 @@ namespace Leopotam.EcsLite.Threads {
                 _pool3 = world.GetPool<T3> ();
                 _pool4 = world.GetPool<T4> ();
                 _filter = GetFilter (world);
+                _thread = new TThread ();
+                _worker = _thread.Execute;
             }
-            TThread thread = default;
-            thread.Init (
+            _thread.Init (
                 _filter.GetRawEntities (),
                 _pool1.GetRawDenseItems (), _pool1.GetRawSparseItems (),
                 _pool2.GetRawDenseItems (), _pool2.GetRawSparseItems (),
                 _pool3.GetRawDenseItems (), _pool3.GetRawSparseItems (),
                 _pool4.GetRawDenseItems (), _pool4.GetRawSparseItems ());
-            SetData (systems, ref thread);
-            ThreadService.Run (ref thread, _filter.GetEntitiesCount (), GetChunkSize (systems));
+            SetData (systems, _thread);
+            ThreadService.Run (_worker, _filter.GetEntitiesCount (), GetChunkSize (systems));
         }
-
-        protected virtual void SetData (EcsSystems systems, ref TThread thread) { }
+    
+        protected virtual void SetData (EcsSystems systems, TThread thread) { }
     }
 
-    public abstract class EcsThreadSystemBase : IEcsRunSystem {
-        public abstract void Run (EcsSystems systems);
+    public abstract class EcsThreadSystemBase {
         protected abstract int GetChunkSize (EcsSystems systems);
         protected abstract EcsFilter GetFilter (EcsWorld world);
         protected abstract EcsWorld GetWorld (EcsSystems systems);

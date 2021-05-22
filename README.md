@@ -74,17 +74,19 @@ class TestThreadSystem : EcsThreadSystem<TestThread, C1> {
 struct TestThread : IEcsThread<C1> {
     public float DeltaTime;
     int[] _entities;
-    EcsPool<C1>.PoolItem[] _pool;
+    C1[] _dense1;
+    int[] _sparse1;
 
-    public void Init (int[] entities, EcsPool<C1>.PoolItem[] pool) {
+    public void Init (int[] entities, C1[] dense1, int[] sparse1) {
         _entities = entities;
-        _pool = pool;
+        _dense1 = dense1;
+        _sparse1 = sparse1;
     }
 
     public void Execute (int fromIndex, int beforeIndex) {
         for (int i = fromIndex; i < beforeIndex; i++) {
             var e = _entities[i];
-            ref var c1 = ref _pool[e].Data;
+            ref var c1 = ref _dense1[_sparse1[e]];
             c1.Id = (c1.Id + 1) % 10000;
         }
     }

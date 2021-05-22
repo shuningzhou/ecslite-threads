@@ -73,7 +73,6 @@ namespace Leopotam.EcsLite.Threads {
                     desc.HasWork.Reset ();
                     _task.Invoke (desc.FromIndex, desc.BeforeIndex);
                     desc.WorkDone.Set ();
-                    Thread.Sleep (0);
                 }
             } catch {
                 // ignored
